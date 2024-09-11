@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -47,6 +49,10 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    // Allow references to generated code
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
@@ -68,4 +74,18 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+    // hilt
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
+    //glide
+    implementation("com.github.bumptech.glide:compose:1.0.0-alpha.5")
+    //coil
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    // navigation
+    val nav_version = "2.8.0"
+
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+    // shimmer
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.1")
+
 }
