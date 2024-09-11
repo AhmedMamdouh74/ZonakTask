@@ -40,7 +40,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -55,7 +54,6 @@ import com.valentinilk.shimmer.ShimmerBounds
 import com.valentinilk.shimmer.rememberShimmer
 import com.valentinilk.shimmer.shimmer
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -64,6 +62,7 @@ class MainActivity : ComponentActivity() {
         "business", "entertainment", "general",
         "health", "science", "sports", "technology"
     )
+
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,8 +73,6 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 NavigationGraph(navController = navController)
                 handleEvents(navController)
-
-
 
 
             }
@@ -99,8 +96,9 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun NewsFragment() {
+        val selectedCategory = newsViewModel.selectedCategory.collectAsState().value
         LaunchedEffect(Unit) {
-            newsViewModel.invokeAction(NewsContract.Action.LoadingNews("business"))
+            newsViewModel.invokeAction(NewsContract.Action.LoadingNews(selectedCategory))
         }
         Column(modifier = Modifier.fillMaxSize()) {
             Spacer(modifier = Modifier.height(20.dp))
@@ -274,7 +272,7 @@ class MainActivity : ComponentActivity() {
                     onClick = {
                         if (newsViewModel.selectedIndex.intValue != index) {
                             newsViewModel.selectedIndex.intValue = index
-                            newsViewModel.invokeAction(NewsContract.Action.LoadingNews(category))
+                            newsViewModel.setSelectedCategory(category)
                         }
                     },
 

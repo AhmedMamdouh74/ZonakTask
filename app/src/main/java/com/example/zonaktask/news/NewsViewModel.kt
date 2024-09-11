@@ -12,6 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +20,8 @@ import javax.inject.Inject
 class NewsViewModel @Inject constructor(private val getNewsUseCase: GetNewsUseCase) : ViewModel(),
     NewsContract.ViewModel {
     val selectedIndex = mutableIntStateOf(0)
+    private val _selectedCategory = MutableStateFlow("business") // default category
+    val selectedCategory: StateFlow<String> get() = _selectedCategory
     private val _states =
         MutableStateFlow<NewsContract.State>(NewsContract.State.Loading("loading"))
     override val states = _states
@@ -44,6 +47,11 @@ class NewsViewModel @Inject constructor(private val getNewsUseCase: GetNewsUseCa
 
         }
 
+    }
+
+    fun setSelectedCategory(category: String) {
+        _selectedCategory.value = category
+        invokeAction(NewsContract.Action.LoadingNews(category))
     }
 
    private fun loadNews(category: String) {
