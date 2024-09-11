@@ -1,6 +1,6 @@
 package com.example.data.api
 
-import com.example.data.model.NewsResponse
+import com.example.data.model.NewsResponseDto
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -8,16 +8,17 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
 interface WepServices {
 
-    @GET("top-headlines")
+    @GET("top-headlines/category/{category}/{countryCode}.json")
     suspend fun getNews(
-        @Query("country") country: String = "us",
-        @Query("category") category: String
-    ):Response<NewsResponse?>
+        @Path("category") category: String,
+        @Path("countryCode") countryCode: String="us"
+    ): Response<NewsResponseDto?>
 
     companion object {
         private const val BASE_URL = "https://saurav.tech/NewsAPI/"
